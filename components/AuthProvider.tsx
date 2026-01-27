@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
 import { useRouter } from "next/navigation";
 import api from "@/lib/api";
 
@@ -24,9 +30,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    // 🔴 لا توكن؟ لا fetch ولا redirect هنا
     if (!token) {
       setLoading(false);
+      router.replace("/login"); // إذا ما في توكن → إعادة توجيه لصفحة Login
       return;
     }
 
@@ -36,6 +42,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .catch(() => {
         localStorage.removeItem("token");
         setUser(null);
+        router.replace("/login"); // إذا التوكن غير صالح → إعادة Login
       })
       .finally(() => setLoading(false));
   }, []);
