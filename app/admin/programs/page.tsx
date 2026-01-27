@@ -24,7 +24,6 @@ export default function ProgramsPage() {
   /* ===== Filter + Search ===== */
   const filteredPrograms = useMemo(() => {
     if (!data?.data) return [];
-
     let programs = data.data;
 
     if (search) {
@@ -40,13 +39,11 @@ export default function ProgramsPage() {
 
   /* ===== Pagination ===== */
   const totalPages = Math.ceil(filteredPrograms.length / itemsPerPage);
-
   const paginatedPrograms = filteredPrograms.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
-  /* ===== Loading (AFTER hooks) ===== */
   if (!data) {
     return (
       <div className="flex justify-center items-center h-64 text-gray-500">
@@ -57,6 +54,7 @@ export default function ProgramsPage() {
 
   return (
     <div className="space-y-6">
+
       {/* ===== Header ===== */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -77,8 +75,8 @@ export default function ProgramsPage() {
         </button>
       </div>
 
-      {/* ===== Search & Pagination Controls ===== */}
-      <div className="bg-white rounded-2xl p-4 shadow flex flex-wrap gap-4 items-center">
+      {/* ===== Search & Controls ===== */}
+      <div className="bg-white rounded-2xl p-4 shadow flex flex-col sm:flex-row gap-4 sm:items-center">
         <input
           type="text"
           placeholder="🔍 بحث بعنوان البرنامج أو الـ slug"
@@ -87,12 +85,12 @@ export default function ProgramsPage() {
             setSearch(e.target.value);
             setCurrentPage(1);
           }}
-          className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-64
+          className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full sm:w-72
                      focus:outline-none focus:ring-2 focus:ring-purple-400"
         />
 
         <select
-          className="border border-gray-300 rounded-xl px-4 py-2 text-sm"
+          className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full sm:w-auto"
           value={itemsPerPage}
           onChange={(e) => {
             setItemsPerPage(Number(e.target.value));
@@ -107,14 +105,14 @@ export default function ProgramsPage() {
         </select>
       </div>
 
-      {/* ===== Table ===== */}
-      <div className="bg-white rounded-3xl shadow overflow-hidden">
+      {/* ================= DESKTOP TABLE ================= */}
+      <div className="hidden md:block bg-white rounded-3xl shadow overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-right">
             <thead className="bg-gray-50 text-gray-600">
               <tr>
                 <th className="p-4">العنوان</th>
-                <th className="p-4">الـ Slug</th>
+                <th className="p-4">Slug</th>
                 <th className="p-4">الصورة</th>
                 <th className="p-4">المستوى</th>
                 <th className="p-4">العمر</th>
@@ -127,14 +125,8 @@ export default function ProgramsPage() {
 
             <tbody>
               {paginatedPrograms.map((item: any) => (
-                <tr
-                  key={item.id}
-                  className="border-t hover:bg-gray-50 transition"
-                >
-                  <td className="p-4 font-semibold text-indigo-900">
-                    {item.title}
-                  </td>
-
+                <tr key={item.id} className="border-t hover:bg-gray-50 transition">
+                  <td className="p-4 font-semibold text-indigo-900">{item.title}</td>
                   <td className="p-4 text-gray-500">{item.slug}</td>
 
                   <td className="p-4">
@@ -154,17 +146,9 @@ export default function ProgramsPage() {
                     </span>
                   </td>
 
-                  <td className="p-4 text-gray-700">
-                    {item.agemin} - {item.agemax}
-                  </td>
-
-                  <td className="p-4 text-gray-700">
-                    {item.duration_weeks} أسبوع
-                  </td>
-
-                  <td className="p-4 font-semibold text-green-600">
-                    {item.price} $
-                  </td>
+                  <td className="p-4">{item.agemin} - {item.agemax}</td>
+                  <td className="p-4">{item.duration_weeks} أسبوع</td>
+                  <td className="p-4 font-semibold text-green-600">{item.price} $</td>
 
                   <td className="p-4">
                     {item.is_published ? (
@@ -179,67 +163,63 @@ export default function ProgramsPage() {
                   </td>
 
                   <td className="p-4">
-                    <div className="flex flex-wrap gap-3 text-xs font-semibold">
-                      <Link
-                        href={`/admin/programs/${item.id}`}
-                        className="px-4 py-2 rounded-full bg-indigo-100 text-indigo-700 hover:bg-indigo-200"
-                      >
-                        عرض
-                      </Link>
-
-                      <Link
-                        href={`/admin/programs/${item.id}/groups`}
-                        className="px-4 py-2 rounded-full bg-purple-100 text-purple-700 hover:bg-purple-200"
-                      >
-                        👥 الجروبات
-                      </Link>
-
-                      <button
-                        onClick={() => setEditing(item)}
-                        className="px-4 py-2 rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200"
-                      >
-                        تعديل
-                      </button>
-
-                      {!item.is_published && (
-                        <button
-                          onClick={async () => {
-                            await api.post(
-                              `/admin/programs/${item.id}/publish`
-                            );
-                            mutate();
-                          }}
-                          className="px-4 py-2 rounded-full bg-green-100 text-green-700 hover:bg-green-200"
-                        >
-                          نشر
-                        </button>
-                      )}
-
-                      <button
-                        onClick={async () => {
-                          if (!confirm("هل تريد حذف البرنامج؟")) return;
-                          await api.delete(`/admin/programs/${item.id}`);
-                          mutate();
-                        }}
-                        className="px-4 py-2 rounded-full bg-red-100 text-red-600 hover:bg-red-200"
-                      >
-                        حذف
-                      </button>
-                    </div>
+                    <Actions item={item} setEditing={setEditing} mutate={mutate} />
                   </td>
                 </tr>
               ))}
-
-              {paginatedPrograms.length === 0 && (
-                <tr>
-                  <td colSpan={9} className="p-6 text-center text-gray-400">
-                    لا توجد نتائج
-                  </td>
-                </tr>
-              )}
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* ================= MOBILE CARDS ================= */}
+      <div className="grid gap-4 md:hidden">
+        {paginatedPrograms.map((item: any) => (
+          <div key={item.id} className="bg-white rounded-2xl p-4 shadow space-y-3">
+
+            <div className="flex items-center gap-3">
+              <img
+                src={
+                  item.image
+                    ? `http://localhost:8000/storage/${item.image}`
+                    : "/default.png"
+                }
+                className="w-14 h-14 rounded-xl object-cover border"
+              />
+              <div>
+                <h3 className="font-bold text-indigo-900">{item.title}</h3>
+                <p className="text-xs text-gray-500">{item.slug}</p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2 text-xs">
+              <span className="px-3 py-1 rounded-full bg-purple-100 text-purple-700">
+                {item.level}
+              </span>
+              <span className="px-3 py-1 rounded-full bg-gray-100">
+                العمر {item.agemin}-{item.agemax}
+              </span>
+              <span className="px-3 py-1 rounded-full bg-gray-100">
+                {item.duration_weeks} أسبوع
+              </span>
+              <span className="px-3 py-1 rounded-full bg-green-100 text-green-700">
+                {item.price} $
+              </span>
+            </div>
+
+            {item.is_published ? (
+              <span className="px-3 py-1 rounded-full text-xs bg-green-100 text-green-700 w-fit">
+                منشور
+              </span>
+            ) : (
+              <span className="px-3 py-1 rounded-full text-xs bg-gray-200 text-gray-600 w-fit">
+                مسودة
+              </span>
+            )}
+
+            <Actions item={item} setEditing={setEditing} mutate={mutate} />
+          </div>
+        ))}
       </div>
 
       {/* ===== Pagination ===== */}
@@ -260,7 +240,6 @@ export default function ProgramsPage() {
         ))}
       </div>
 
-      {/* ===== Modals ===== */}
       {showAdd && (
         <AddProgramModal onClose={() => setShowAdd(false)} mutate={mutate} />
       )}
@@ -272,6 +251,57 @@ export default function ProgramsPage() {
           mutate={mutate}
         />
       )}
+    </div>
+  );
+}
+
+/* ===== Actions (نفس أزرارك بالضبط) ===== */
+function Actions({ item, setEditing, mutate }: any) {
+  return (
+    <div className="flex flex-wrap gap-3 text-xs font-semibold">
+      <Link
+        href={`/admin/programs/${item.id}`}
+        className="px-4 py-2 rounded-full bg-indigo-100 text-indigo-700 hover:bg-indigo-200"
+      >
+        عرض
+      </Link>
+
+      <Link
+        href={`/admin/programs/${item.id}/groups`}
+        className="px-4 py-2 rounded-full bg-purple-100 text-purple-700 hover:bg-purple-200"
+      >
+        👥 الجروبات
+      </Link>
+
+      <button
+        onClick={() => setEditing(item)}
+        className="px-4 py-2 rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200"
+      >
+        تعديل
+      </button>
+
+      {!item.is_published && (
+        <button
+          onClick={async () => {
+            await api.post(`/admin/programs/${item.id}/publish`);
+            mutate();
+          }}
+          className="px-4 py-2 rounded-full bg-green-100 text-green-700 hover:bg-green-200"
+        >
+          نشر
+        </button>
+      )}
+
+      <button
+        onClick={async () => {
+          if (!confirm("هل تريد حذف البرنامج؟")) return;
+          await api.delete(`/admin/programs/${item.id}`);
+          mutate();
+        }}
+        className="px-4 py-2 rounded-full bg-red-100 text-red-600 hover:bg-red-200"
+      >
+        حذف
+      </button>
     </div>
   );
 }

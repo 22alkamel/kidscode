@@ -9,12 +9,11 @@ export default function AdminLayout({
   return (
     <RoleGuard allow={["admin"]}>
       <div className="min-h-screen bg-gray-100" dir="rtl">
-        
-        {/* Sidebar */}
+
         <Sidebar />
 
         {/* Content */}
-        <main className="mr-64 p-6">
+        <main className="pt-16 lg:pt-0 p-4 sm:p-6 lg:mr-64">
           {children}
         </main>
 

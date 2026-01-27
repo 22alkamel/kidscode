@@ -115,7 +115,6 @@ export default function AdminEnrollmentsPage() {
 
   /* ================= PAGINATION ================= */
   const totalPages = Math.ceil(filteredRegistrations.length / itemsPerPage);
-
   const paginatedData = filteredRegistrations.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
@@ -131,6 +130,7 @@ export default function AdminEnrollmentsPage() {
 
   return (
     <div className="space-y-6">
+
       {toast && <Toast message={toast} />}
 
       {/* ===== Header ===== */}
@@ -163,7 +163,7 @@ export default function AdminEnrollmentsPage() {
       </div>
 
       {/* ===== Filters ===== */}
-      <div className="bg-white rounded-2xl p-4 shadow flex flex-wrap gap-4 items-center">
+      <div className="bg-white rounded-2xl p-4 shadow flex flex-col sm:flex-row gap-4 items-center">
         <input
           type="text"
           placeholder="🔍 بحث بالاسم، الإيميل أو البرنامج"
@@ -172,12 +172,12 @@ export default function AdminEnrollmentsPage() {
             setSearch(e.target.value);
             setCurrentPage(1);
           }}
-          className="border rounded-xl px-4 py-2 text-sm w-72
+          className="border rounded-xl px-4 py-2 text-sm w-full sm:w-72
                      focus:ring-2 focus:ring-purple-400 outline-none"
         />
 
         <select
-          className="border rounded-xl px-4 py-2 text-sm"
+          className="border rounded-xl px-4 py-2 text-sm w-full sm:w-auto"
           value={itemsPerPage}
           onChange={(e) => {
             setItemsPerPage(Number(e.target.value));
@@ -192,8 +192,8 @@ export default function AdminEnrollmentsPage() {
         </select>
       </div>
 
-      {/* ===== Table ===== */}
-      <div className="bg-white rounded-3xl shadow overflow-hidden">
+      {/* ================= DESKTOP TABLE ================= */}
+      <div className="hidden md:block bg-white rounded-3xl shadow overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-right">
             <thead className="bg-gray-50 text-gray-600">
@@ -214,10 +214,7 @@ export default function AdminEnrollmentsPage() {
                 <tr key={r.id} className="border-t hover:bg-gray-50 transition">
                   <td className="p-4 font-semibold">{r.user.name}</td>
                   <td className="p-4 font-semibold">{r.user.email}</td>
-                  <td className="p-4 font-semibold">
-                    {" "}
-                    {r.user.student_profile?.guardian_phone || "—"}
-                  </td>
+                  <td className="p-4 font-semibold">{r.user.student_profile?.guardian_phone || "—"}</td>
                   <td className="p-4">{r.program.title}</td>
                   <td className="p-4">{DAYS_OPTIONS[r.preferred_days]}</td>
                   <td className="p-4">{TIME_OPTIONS[r.preferred_time]}</td>
@@ -237,44 +234,46 @@ export default function AdminEnrollmentsPage() {
                     </span>
                   </td>
 
-                  <td className="p-4 flex gap-2">
-                    <button
-                      onClick={() => openEdit(r)}
-                      className="px-4 py-2 rounded-full text-xs bg-yellow-100 text-yellow-700"
-                    >
-                      تعديل
-                    </button>
-
-                    {r.status === "pending" && (
-                      <>
-                        <button
-                          onClick={() => updateStatus(r.id, "confirmed")}
-                          className="px-4 py-2 rounded-full text-xs bg-green-100 text-green-700"
-                        >
-                          قبول
-                        </button>
-                        <button
-                          onClick={() => updateStatus(r.id, "cancelled")}
-                          className="px-4 py-2 rounded-full text-xs bg-red-100 text-red-600"
-                        >
-                          إلغاء
-                        </button>
-                      </>
-                    )}
+                  <td className="p-4 flex flex-wrap gap-2">
+                    <Actions r={r} openEdit={openEdit} updateStatus={updateStatus} />
                   </td>
                 </tr>
               ))}
-
-              {paginatedData.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="p-6 text-center text-gray-400">
-                    لا توجد نتائج
-                  </td>
-                </tr>
-              )}
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* ================= MOBILE CARDS ================= */}
+      <div className="grid gap-4 md:hidden">
+        {paginatedData.map((r) => (
+          <div key={r.id} className="bg-white rounded-2xl p-4 shadow space-y-3">
+            <h3 className="font-bold text-indigo-900">{r.user.name}</h3>
+            <p className="text-sm text-gray-600">{r.user.email}</p>
+            <p className="text-sm text-gray-600">
+              رقم الهاتف: {r.user.student_profile?.guardian_phone || "—"}
+            </p>
+            <p className="text-sm text-gray-600">البرنامج: {r.program.title}</p>
+            <p className="text-sm text-gray-600">الأيام: {DAYS_OPTIONS[r.preferred_days]}</p>
+            <p className="text-sm text-gray-600">الوقت: {TIME_OPTIONS[r.preferred_time]}</p>
+            <p>
+              الحالة:{" "}
+              <span
+                className={`px-2 py-1 rounded-full text-xs font-semibold
+                        ${
+                          r.status === "pending"
+                            ? "bg-yellow-100 text-yellow-700"
+                            : r.status === "confirmed"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-600"
+                        }`}
+              >
+                {r.status}
+              </span>
+            </p>
+            <Actions r={r} openEdit={openEdit} updateStatus={updateStatus} isMobile />
+          </div>
+        ))}
       </div>
 
       {/* ===== Pagination ===== */}
@@ -308,12 +307,43 @@ export default function AdminEnrollmentsPage() {
   );
 }
 
+/* ================= ACTIONS COMPONENT ================= */
+function Actions({ r, openEdit, updateStatus, isMobile }: any) {
+  return (
+    <div className={`flex flex-wrap gap-2 ${isMobile ? "justify-start" : ""}`}>
+      <button
+        onClick={() => openEdit(r)}
+        className="px-4 py-2 rounded-full text-xs bg-yellow-100 text-yellow-700"
+      >
+        تعديل
+      </button>
+
+      {r.status === "pending" && (
+        <>
+          <button
+            onClick={() => updateStatus(r.id, "confirmed")}
+            className="px-4 py-2 rounded-full text-xs bg-green-100 text-green-700"
+          >
+            قبول
+          </button>
+          <button
+            onClick={() => updateStatus(r.id, "cancelled")}
+            className="px-4 py-2 rounded-full text-xs bg-red-100 text-red-600"
+          >
+            إلغاء
+          </button>
+        </>
+      )}
+    </div>
+  );
+}
+
 /* ================= MODAL ================= */
 function EditModal({ form, setForm, onClose, onSave }: any) {
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className=" bg-white p-6 rounded rounded-2xl shadow w-96 w-full max-w-4xl">
-        <div className="bg-gradient-to-r from-indigo-600 to-pink-500 p-6 mb-4 rounded-2xl text-white">
+      <div className="bg-white p-6 rounded-2xl shadow w-full max-w-md">
+        <div className="bg-gradient-to-r from-indigo-600 to-pink-500 p-4 mb-4 rounded-2xl text-white">
           <h2 className="text-lg font-bold">تعديل طلب التسجيل</h2>
         </div>
 
@@ -330,14 +360,12 @@ function EditModal({ form, setForm, onClose, onSave }: any) {
                   {v}
                 </option>
               ))}
-
             {field === "preferred_time" &&
               Object.entries(TIME_OPTIONS).map(([k, v]) => (
                 <option key={k} value={k}>
                   {v}
                 </option>
               ))}
-
             {field === "status" && (
               <>
                 <option value="pending">قيد الانتظار</option>
@@ -349,16 +377,10 @@ function EditModal({ form, setForm, onClose, onSave }: any) {
         ))}
 
         <div className="flex justify-end gap-2 mt-4">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-gray-200 rounded-full"
-          >
+          <button onClick={onClose} className="px-4 py-2 bg-gray-200 rounded-full">
             إلغاء
           </button>
-          <button
-            onClick={onSave}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-full"
-          >
+          <button onClick={onSave} className="px-4 py-2 bg-indigo-600 text-white rounded-full">
             حفظ
           </button>
         </div>
