@@ -15,18 +15,18 @@ export default function CoursesHero() {
         <div className="w-full">
           <div className="max-w-3xl ml-auto text-right" dir="rtl">
             <h1 className="text-5xl md:text-6xl font-bold text-indigo-900 mb-6 leading-tight">
-              دوراتنا التعليمية
+            برامجنا التدريبيه
             </h1>
             <p className="text-xl text-gray-700 mb-8 leading-relaxed">
-              اكتشف مجموعة متنوعة من الدورات المصممة خصيصًا لتناسب أعمار ومستويات مختلفة. من الأساسيات إلى المستوى المتقدم، نوفر رحلة تعلم شاملة وممتعة.
+              اكتشف مجموعة متنوعة من البرامج التدريبيه المصممة خصيصًا لتناسب أعمار ومستويات مختلفة. من الأساسيات إلى المستوى المتقدم، نوفر رحلة تعلم شاملة وممتعة.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-              <div className="bg-white/80 p-6 rounded-2xl backdrop-blur-sm">
+              {/* <div className="bg-white/80 p-6 rounded-2xl backdrop-blur-sm">
                 <div className="text-3xl font-bold text-blue-500 mb-2">25+</div>
                 <div className="text-gray-700">دورة متنوعة</div>
-              </div>
+              </div> */}
               <div className="bg-white/80 p-6 rounded-2xl backdrop-blur-sm">
-                <div className="text-3xl font-bold text-pink-500 mb-2">6-16</div>
+                <div className="text-3xl font-bold text-pink-500 mb-2">7-16</div>
                 <div className="text-gray-700">سنة (الفئة العمرية)</div>
               </div>
               <div className="bg-white/80 p-6 rounded-2xl backdrop-blur-sm">

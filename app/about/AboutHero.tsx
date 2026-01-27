@@ -24,7 +24,7 @@ export default function AboutHero() {
               الجيل القادم من المبدعين والمبتكرين من خلال تعليم البرمجة بطريقة
               تفاعلية وممتعة.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+            {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
               <div className="bg-white/80 p-6 rounded-2xl backdrop-blur-sm">
                 <div className="text-3xl font-bold text-blue-500 mb-2">
                   2020
@@ -43,7 +43,7 @@ export default function AboutHero() {
                 </div>
                 <div className="text-gray-700">دولة حول العالم</div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

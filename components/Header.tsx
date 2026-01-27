@@ -19,7 +19,7 @@ export default function Header() {
             </Link>
             <Link
               href="/dashboard"
-              className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors whitespace-nowrap"
+              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 text-center whitespace-nowrap"
             >
               لوحة التحكم
             </Link>
@@ -42,13 +42,13 @@ export default function Header() {
               href="/courses"
               className="text-gray-700 hover:text-blue-500 font-medium transition-colors"
             >
-              الدورات
+              المسارات
             </Link>
             <Link
               href="/playground"
               className="text-gray-700 hover:text-blue-500 font-medium transition-colors"
             >
-              ساحة البرمجة
+              ابطالنا
             </Link>
             <Link
               href="/blog"
@@ -65,9 +65,13 @@ export default function Header() {
           </nav>
 
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <i className="ri-code-s-slash-line text-white text-lg"></i>
-            </div>
+            <img
+              src="/logoo.png" // حطي مسار الصورة
+              alt="Kidscode Logo"
+              width={52}
+              height={52}
+              className="rounded-lg"
+            />
             <span
               className="text-2xl font-bold text-indigo-900"
               style={{ fontFamily: "Pacifico, serif" }}
@@ -102,13 +106,13 @@ export default function Header() {
                 href="/courses"
                 className="text-gray-700 hover:text-blue-500 font-medium"
               >
-                الدورات
+                المسارات
               </Link>
               <Link
                 href="/playground"
                 className="text-gray-700 hover:text-blue-500 font-medium"
               >
-                ساحة البرمجة
+                ابطالنا
               </Link>
               <Link
                 href="/blog"

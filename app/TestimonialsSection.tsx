@@ -34,7 +34,7 @@ export default function TestimonialsSection() {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-r from-blue-50 to-purple-50" dir="rtl">
+    <section className="py-20 bg-gray-50" dir="rtl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16" dir="rtl">
           <h2 className="text-4xl font-bold text-indigo-900 mb-4">
