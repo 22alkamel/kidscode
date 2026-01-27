@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import api from "@/lib/api";
 
 type Role = "admin" | "trainer" | "student";
@@ -13,30 +14,46 @@ interface RoleGuardProps {
 export default function RoleGuard({ allow, children }: RoleGuardProps) {
   const [loading, setLoading] = useState(true);
   const [allowed, setAllowed] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     (async () => {
       try {
-        const res = await api.get("/me");
+        const token = localStorage.getItem("token");
+        if (!token) {
+          // إذا ما فيه توكن، نعيد التوجيه للّوجين مباشرة
+          router.replace("/login");
+          return;
+        }
+
+        // جلب بيانات المستخدم مع Authorization header
+        const res = await api.get("/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
         const role: Role = res.data.role;
 
         if (allow.includes(role)) {
           setAllowed(true);
         } else {
-          // Redirect ذكي حسب الدور
-          if (role === "admin") window.location.href = "/admin";
-          if (role === "trainer") window.location.href = "/trainer";
-          if (role === "student") window.location.href = "/dashboard";
+          // إعادة توجيه ذكي حسب الدور
+          if (role === "admin") router.replace("/admin");
+          else if (role === "trainer") router.replace("/trainer");
+          else if (role === "student") router.replace("/dashboard");
+          return;
         }
       } catch (err) {
-        window.location.href = "/login";
+        router.replace("/login");
+        return;
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     })();
-  }, [allow]);
+  }, [allow, router]);
 
-  if (loading) return <p className="p-10">Loading...</p>;
+  if (loading) return <p className="p-10 text-center">جارٍ التحميل...</p>;
   if (!allowed) return null;
 
   return <>{children}</>;
