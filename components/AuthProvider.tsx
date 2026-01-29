@@ -7,7 +7,6 @@ import {
   useState,
   ReactNode,
 } from "react";
-import { useRouter } from "next/navigation";
 import api from "@/lib/api";
 
 type AuthContextType = {
@@ -25,14 +24,13 @@ export function useAuth() {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
 
+    // 🔹 لا توكن؟ عادي — المستخدم ضيف
     if (!token) {
       setLoading(false);
-      router.replace("/login"); // إذا ما في توكن → إعادة توجيه لصفحة Login
       return;
     }
 
@@ -42,7 +40,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .catch(() => {
         localStorage.removeItem("token");
         setUser(null);
-        router.replace("/login"); // إذا التوكن غير صالح → إعادة Login
       })
       .finally(() => setLoading(false));
   }, []);
@@ -54,7 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     localStorage.removeItem("token");
     setUser(null);
-    router.replace("/login"); // ✅ redirect آمن
+    // ⛔ لا Redirect هنا
   };
 
   return (
