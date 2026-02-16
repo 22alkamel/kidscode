@@ -29,27 +29,22 @@ export default function Dashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    api.get("/my-registrations").then(res => {
+    api.get("/my-registrations").then((res) => {
       setProgramsCount(res.data.programs_count);
       setRegistrations(res.data.registrations);
       setLoading(false);
     });
 
-    api.get("/notifications").then(res => setNotifications(res.data));
+    api.get("/notifications").then((res) => setNotifications(res.data));
   }, []);
 
-  const hasUnread = notifications.some(n => !n.read_at);
+  const hasUnread = notifications.some((n) => !n.read_at);
 
   return (
-    <div
-      dir="rtl"
-      className="min-h-screen bg-[#EEF0FF] p-4 md:p-6"
-    >
+    <div dir="rtl" className="min-h-screen bg-[#EEF0FF] p-4 md:p-6">
       <div className="flex flex-col lg:flex-row gap-6">
-
         {/* ===== Main ===== */}
         <main className="flex-1 space-y-6">
-
           {/* Header */}
           <div className="bg-gradient-to-r from-pink-500 to-blue-500 text-white rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
@@ -60,20 +55,16 @@ export default function Dashboard() {
                 أهلاً بك في عالم العباقرة الصغار
               </p>
             </div>
-            <img
-              src="/logoo.png"
-              alt="logo"
-              className="h-20 sm:h-24"
-            />
+            <img src="/logoo.png" alt="logo" className="h-20 sm:h-24" />
           </div>
 
           {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {[
               { title: "البرامج", value: programsCount },
-              { title: "المكتملة", value: 3 },
-              { title: "النقاط", value: 120 },
-              { title: "الشارة", value: "صانع الألعاب" },
+              { title: "المكتملة", value: "" },
+              { title: "النقاط", value: "" },
+              { title: "الشارة", value: " " },
             ].map((c, i) => (
               <div
                 key={i}
@@ -86,84 +77,66 @@ export default function Dashboard() {
           </div>
 
           {/* Programs */}
-          <div className="bg-white rounded-2xl p-4 shadow">
-            <h2 className="font-bold mb-4">مسارات التعلم</h2>
 
-            {/* Mobile cards */}
-            <div className="space-y-3 md:hidden">
-              {loading && <p className="text-center">جاري التحميل...</p>}
+          {/* PROGRAMS */}
+          <div className="bg-white rounded-3xl shadow-lg p-6">
+            <h2 className="text-xl font-bold mb-6 text-indigo-900">
+              برامجي التعليمية
+            </h2>
 
-              {!loading && registrations.length === 0 && (
-                <p className="text-center text-gray-500">
-                  لا توجد برامج مسجلة
-                </p>
-              )}
+            {loading && <p className="text-center">جاري التحميل...</p>}
 
-              {registrations.map(reg => (
+            {!loading && registrations.length === 0 && (
+              <p className="text-center text-gray-500">
+                لا توجد برامج مسجلة بعد
+              </p>
+            )}
+
+            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
+              {registrations.map((reg) => (
                 <div
                   key={reg.id}
-                  className="border rounded-xl p-3 space-y-1"
+                  className="border rounded-2xl p-5 hover:shadow-xl transition"
                 >
-                  <p className="font-semibold">
+                  <h3 className="font-bold text-indigo-900 mb-2">
                     {reg.program?.title}
-                  </p>
+                  </h3>
+
                   <p className="text-sm text-gray-600">
                     {DAYS_MAP[reg.preferred_days]} |{" "}
                     {TIME_MAP[reg.preferred_time]}
                   </p>
-                  <p
-                    className={`text-sm font-semibold ${
-                      reg.status === "confirmed"
-                        ? "text-green-600"
-                        : reg.status === "pending"
-                        ? "text-yellow-600"
-                        : "text-red-600"
-                    }`}
+
+                  <span
+                    className={`inline-block mt-3 px-3 py-1 text-xs rounded-full font-semibold
+                ${
+                  reg.status === "confirmed"
+                    ? "bg-green-100 text-green-700"
+                    : reg.status === "pending"
+                    ? "bg-yellow-100 text-yellow-700"
+                    : "bg-red-100 text-red-700"
+                }`}
                   >
-                    {reg.status === "pending" && "قيد المراجعة"}
                     {reg.status === "confirmed" && "مؤكد"}
+                    {reg.status === "pending" && "قيد المراجعة"}
                     {reg.status === "cancelled" && "ملغي"}
-                  </p>
+                  </span>
                 </div>
               ))}
             </div>
-
-            {/* Desktop table */}
-            <table className="hidden md:table w-full text-sm">
-              <thead className="text-gray-400 border-b">
-                <tr>
-                  <th className="py-2">البرنامج</th>
-                  <th>الحالة</th>
-                  <th>الموعد</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y">
-                {registrations.map(reg => (
-                  <tr key={reg.id}>
-                    <td className="py-2">{reg.program?.title}</td>
-                    <td className="font-semibold">
-                      {reg.status === "confirmed" && "مؤكد"}
-                      {reg.status === "pending" && "قيد المراجعة"}
-                      {reg.status === "cancelled" && "ملغي"}
-                    </td>
-                    <td>
-                      {DAYS_MAP[reg.preferred_days]} |{" "}
-                      {TIME_MAP[reg.preferred_time]}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
         </main>
 
         {/* ===== Sidebar ===== */}
         <aside className="w-full lg:w-72 space-y-6">
-
           {/* Profile */}
           <div className="bg-white rounded-2xl p-4 shadow text-center">
             <img
-              src={user?.avatar ? `http://localhost:8000${user.avatar}` : "/default.jpg"}
+              src={
+                user?.avatar
+                  ? `http://localhost:8000${user.avatar}`
+                  : "/default.jpg"
+              }
               className="w-16 h-16 rounded-full mx-auto mb-2"
             />
             <p className="font-semibold">{user?.name}</p>
@@ -180,14 +153,16 @@ export default function Dashboard() {
           <div className="bg-white rounded-2xl p-4 shadow">
             <h3 className="font-bold mb-3 flex justify-between">
               الإشعارات
-              {hasUnread && <span className="w-2 h-2 bg-red-500 rounded-full" />}
+              {hasUnread && (
+                <span className="w-2 h-2 bg-red-500 rounded-full" />
+              )}
             </h3>
 
             {notifications.length === 0 ? (
               <p className="text-sm text-gray-500">لا توجد إشعارات</p>
             ) : (
               <ul className="space-y-2 max-h-48 overflow-y-auto">
-                {notifications.slice(0, 5).map(n => (
+                {notifications.slice(0, 5).map((n) => (
                   <li
                     key={n.id}
                     className={`p-2 rounded text-sm ${

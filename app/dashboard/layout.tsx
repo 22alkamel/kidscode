@@ -24,79 +24,68 @@ export default function DashboardLayout({
 
   return (
     <RoleGuard allow={["student"]}>
-      <div className="flex min-h-screen bg-[#EEF0FF] p-6 gap-6" dir="rtl">
+      <div className="min-h-screen bg-[#F4F6FF]" dir="rtl">
 
-        {/* ===== Sidebar ===== */}
-        <aside
-          className={`
-            fixed top-0 right-0 h-full w-64 bg-white rounded-l-2xl shadow-lg p-6
-            transform transition-transform duration-300
-            ${sidebarOpen ? "translate-x-0" : "translate-x-full"}
-            md:translate-x-0 md:static md:flex md:flex-col
-          `}
-        >
-          {/* Top Bar Close Button for Mobile */}
-          <div className="flex justify-between items-center mb-8 md:hidden">
-            <h2 className="text-xl font-bold text-indigo-600">القائمة</h2>
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="text-2xl font-bold"
-            >
-              &times;
-            </button>
+        <div className="flex">
+
+          {/* ===== Sidebar ===== */}
+          <aside
+            className={`
+              fixed top-0 right-0 z-40
+              h-screen w-72 bg-white
+              border-l shadow-xl
+              p-6 flex flex-col
+              transition-transform duration-300
+              ${sidebarOpen ? "translate-x-0" : "translate-x-full"}
+              lg:translate-x-0
+            `}
+          >
+            <h2 className="text-2xl font-extrabold text-indigo-600 mb-10">
+              KidsCode 🚀
+            </h2>
+
+            <nav className="flex-1 space-y-3 text-gray-600 font-medium">
+              <Link href="/dashboard" className="block p-3 rounded-xl hover:bg-indigo-50">
+                🏠 الرئيسية
+              </Link>
+
+              <Link href="/dashboard/programs" className="block p-3 rounded-xl hover:bg-indigo-50">
+                📚 برامجي
+              </Link>
+
+              <Link href="/profile/edit" className="block p-3 rounded-xl hover:bg-indigo-50">
+                ⚙️ الإعدادات
+              </Link>
+            </nav>
+
+            <div className="space-y-3 pt-6 border-t">
+              <a
+                href="https://wa.me/967773398837"
+                target="_blank"
+                className="block text-center py-3 rounded-xl bg-green-500 text-white font-semibold hover:bg-green-600"
+              >
+                💬 الدعم الفني
+              </a>
+
+              <button
+                onClick={logout}
+                className="w-full py-3 rounded-xl text-indigo-600 font-semibold hover:bg-indigo-50"
+              >
+                🚪 تسجيل الخروج
+              </button>
+            </div>
+          </aside>
+
+          {/* ===== Content ===== */}
+          <div className="flex-1 lg:mr-72 p-4 md:p-8">
+            {/* Mobile topbar */}
+            <div className="lg:hidden flex justify-between items-center bg-white p-4 rounded-2xl shadow mb-6">
+              <h1 className="font-bold text-indigo-600">لوحة التحكم</h1>
+              <button onClick={() => setSidebarOpen(true)}>☰</button>
+            </div>
+
+            {children}
           </div>
-
-          {/* Nav Links */}
-          <nav className="flex-1 space-y-4 text-gray-600">
-            <h2 className="text-xl font-bold mb-8 text-indigo-600">البروفايل</h2>
-
-            <Link href="/dashboard" className="block hover:text-indigo-800">
-              🏠 الرئيسية
-            </Link>
-
-            <Link href="/dashboard/programs" className="block hover:text-indigo-800">
-              📚 البرامج
-            </Link>
-
-            <Link href="/profile/edit" className="block hover:text-indigo-800">
-              ⚙️ الإعدادات
-            </Link>
-          </nav>
-
-          {/* Support & Logout */}
-          <div className="pt-6 border-t space-y-3">
-            <a
-              href="https://wa.me/967773398837"
-              target="_blank"
-              className="flex items-center justify-center gap-2 w-full py-2 rounded-lg bg-green-500 text-white font-semibold hover:bg-green-600 transition"
-            >
-              💬 الدعم الفني
-            </a>
-
-            <button
-              onClick={logout}
-              className="flex items-center justify-center gap-2 w-full py-2 rounded-lg text-indigo-600 font-semibold hover:bg-indigo-50 transition"
-            >
-              🚪 تسجيل الخروج
-            </button>
-          </div>
-        </aside>
-
-        {/* ===== Main Content ===== */}
-        <div className="flex-1 flex flex-col md:ml-0">
-          {/* Top Bar for Mobile only */}
-          <div className="flex items-center justify-between bg-white shadow p-4 mb-6 md:hidden rounded-2xl">
-            <h1 className="text-lg font-bold text-indigo-600">لوحة التحكم</h1>
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="text-2xl font-bold"
-            >
-              &#9776;
-            </button>
-          </div>
-
-          {/* Content */}
-          <main className="flex-1 space-y-6">{children}</main>
         </div>
       </div>
     </RoleGuard>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import useSWR from "swr";
 import api from "@/lib/api";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const grades = [
   { id: 1, label: "(7-9)", age: 8 },
@@ -13,37 +14,36 @@ const grades = [
   { id: 5, label: "(15-17)", age: 16 },
 ];
 
-const plans = [
-  {
-    level: "مبتدئ",
-    price: "20$",
-    features: ["تعلم الأساسيات", "تمارين قصيرة", "دعم محدود"],
-  },
-  {
-    level: "متوسط",
-    price: "40$",
-    features: ["مشاريع متقدمة", "دعم متوسط", "شهادات جزئية"],
-  },
-  {
-    level: "متقدم",
-    price: "50$",
-    features: ["مشاريع كاملة", "دعم كامل", "مزايا إضافية"],
-  },
-];
-
 export default function HorizontalTimeline() {
   const [selectedGrade, setSelectedGrade] = useState(1);
   const selectedAge = grades.find((g) => g.id === selectedGrade)?.age ?? 8;
+  const router = useRouter();
 
   const fetcher = (url: string) => api.get(url).then((res) => res.data?.data);
 
-  const { data: program, error, isLoading } = useSWR(
-    () => `/programs?age=${selectedAge}`,
-    fetcher,
-    { revalidateOnFocus: false }
-  );
+  const {
+    data: program,
+    error,
+    isLoading,
+  } = useSWR(() => `/programs?age=${selectedAge}`, fetcher, {
+    revalidateOnFocus: false,
+  });
 
   const tracks = program?.tracks ?? [];
+  const handleSubscribe = () => {
+    const token = localStorage.getItem("token");
+
+    if (!program?.id) return;
+
+    // المستخدم غير مسجل
+    if (!token) {
+      router.push(`/login?redirect=/select-schedule?program_id=${program.id}`);
+      return;
+    }
+
+    // المستخدم مسجل
+    router.push(`/register/select-schedule?program_id=${program.id}`);
+  };
 
   return (
     <section
@@ -51,7 +51,6 @@ export default function HorizontalTimeline() {
       className="py-20 bg-gradient-to-b from-blue-50 via-white to-purple-50"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-
         {/* العنوان */}
         <h2 className="text-2xl sm:text-3xl font-extrabold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-10">
           ابدأ بصناعة مستقبل طفلك 🚀
@@ -90,11 +89,23 @@ export default function HorizontalTimeline() {
         <h3 className="text-xl sm:text-2xl font-bold text-center text-indigo-900 mb-14">
           {program
             ? program.title
-            : `لا يوجد برنامج للفئة ${grades.find(
-                (g) => g.id === selectedGrade
-              )?.label}`}
+            : `لا يوجد برنامج للفئة ${
+                grades.find((g) => g.id === selectedGrade)?.label
+              }`}
         </h3>
 
+        {program && (
+          <div className="flex justify-center mb-16">
+            <button
+              onClick={() => handleSubscribe()}
+              className="bg-gradient-to-r from-blue-600 to-purple-600
+      hover:scale-105 transition text-white font-bold
+      px-8 py-4 rounded-2xl shadow-xl text-lg"
+            >
+              اشترك في البرنامج مقابل {program.price} دولار 🚀
+            </button>
+          </div>
+        )}
         {/* ================= Timeline ================= */}
 
         {/* 🟣 نسخة الجوال والآيباد (عمودية) */}
@@ -124,9 +135,7 @@ export default function HorizontalTimeline() {
                   </div>
 
                   <div>
-                    <h4 className="font-bold text-indigo-900">
-                      {track.title}
-                    </h4>
+                    <h4 className="font-bold text-indigo-900">{track.title}</h4>
                     <p className="text-sm text-gray-600 mt-1">
                       {track.description}
                     </p>
@@ -155,17 +164,21 @@ export default function HorizontalTimeline() {
                 : "/default.png";
 
               return (
-                <div key={track.id} className="relative flex flex-col items-center">
+                <div
+                  key={track.id}
+                  className="relative flex flex-col items-center"
+                >
                   {/* النقطة */}
                   <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg z-10" />
 
                   {/* الكرت */}
                   <div
-                    className={`absolute w-80 bg-white rounded-3xl shadow-2xl p-6
+                    className={`absolute w-80 bg-white rounded-3xl shadow-2xl p-6 flex flex-col justify-between h-[170px]
+
                       ${isTop ? "-top-52" : "top-20"}`}
                   >
-                    <div className="flex gap-4">
-                      <div className="relative w-24 h-24 rounded-xl overflow-hidden">
+                    <div className="grid grid-cols-[96px_1fr] gap-4 items-start">
+                      <div className="relative w-24 h-24 min-w-[96px] rounded-xl overflow-hidden">
                         <Image
                           src={imageURL}
                           alt={track.title}
@@ -196,43 +209,6 @@ export default function HorizontalTimeline() {
         </div>
 
         {/* ================= Pricing ================= */}
-        {program && (
-          <div className="mt-24 pt-42">
-            <h3 className="text-2xl font-bold text-center text-indigo-900 mb-12">
-              خطط الاشتراك 🎓
-            </h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {plans.map((plan) => (
-                <div
-                  key={plan.level}
-                  className="bg-white rounded-3xl p-8 text-center shadow-lg hover:shadow-2xl transition"
-                >
-                  <h4 className="text-xl font-bold text-indigo-900 mb-2">
-                    {plan.level}
-                  </h4>
-
-                  <p className="text-3xl font-extrabold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent mb-5">
-                    {plan.price}
-                  </p>
-
-                  <ul className="space-y-2 text-gray-700 mb-6">
-                    {plan.features.map((f, i) => (
-                      <li key={i} className="flex justify-center gap-2">
-                        <span className="w-2 h-2 bg-purple-500 rounded-full mt-2" />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-3 rounded-full font-semibold hover:scale-105 transition">
-                    اشترك الآن
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </section>
   );

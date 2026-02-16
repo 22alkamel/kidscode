@@ -93,7 +93,7 @@ export default function CoursesList({ selectedAge }: CoursesListProps) {
                   </p>
 
                   <Link
-                    href={`/programs/${program.slug}`}
+                    href={`/courses/${program.slug}`}
                     className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity flex items-center justify-center"
                   >
                     عرض البرنامج

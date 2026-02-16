@@ -50,12 +50,12 @@ export default function Header() {
             >
               ابطالنا
             </Link>
-            <Link
+            {/* <Link
               href="/blog"
               className="text-gray-700 hover:text-blue-500 font-medium transition-colors"
             >
               المدونة
-            </Link>
+            </Link> */}
             <Link
               href="/contact"
               className="text-gray-700 hover:text-blue-500 font-medium transition-colors"
@@ -114,12 +114,12 @@ export default function Header() {
               >
                 ابطالنا
               </Link>
-              <Link
+              {/* <Link
                 href="/blog"
                 className="text-gray-700 hover:text-blue-500 font-medium"
               >
                 المدونة
-              </Link>
+              </Link> */}
               <Link
                 href="/contact"
                 className="text-gray-700 hover:text-blue-500 font-medium"
