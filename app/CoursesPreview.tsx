@@ -18,7 +18,7 @@ export default function HorizontalTimeline() {
   const [selectedGrade, setSelectedGrade] = useState(1);
   const selectedAge = grades.find((g) => g.id === selectedGrade)?.age ?? 8;
   const router = useRouter();
-
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") ?? "";
   const fetcher = (url: string) => api.get(url).then((res) => res.data?.data);
 
   const {
@@ -112,7 +112,7 @@ export default function HorizontalTimeline() {
         <div className="lg:hidden relative space-y-10">
           {tracks.map((track: any) => {
             const imageURL = track.track_img
-              ? `http://localhost:8000/storage/${track.track_img}`
+              ? `${backendUrl}/storage/${track.track_img}`
               : "/default.png";
 
             return (
@@ -160,7 +160,7 @@ export default function HorizontalTimeline() {
             {tracks.map((track: any, index: number) => {
               const isTop = index % 2 === 0;
               const imageURL = track.track_img
-                ? `http://localhost:8000/storage/${track.track_img}`
+                ? `${backendUrl}/storage/${track.track_img}`
                 : "/default.png";
 
               return (

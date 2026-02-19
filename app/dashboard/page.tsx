@@ -27,6 +27,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState<any[]>([]);
   const router = useRouter();
+     const backendUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") ?? "";
 
   useEffect(() => {
     api.get("/my-registrations").then((res) => {
@@ -134,7 +135,7 @@ export default function Dashboard() {
             <img
               src={
                 user?.avatar
-                  ? `http://localhost:8000${user.avatar}`
+                  ? `${backendUrl}${user.avatar}`
                   : "/default.jpg"
               }
               className="w-16 h-16 rounded-full mx-auto mb-2"

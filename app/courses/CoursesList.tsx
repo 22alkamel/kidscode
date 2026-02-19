@@ -17,6 +17,7 @@ const fetcher = (url: string) =>
     return [];
   });
 
+   const backendUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") ?? "";
 export default function CoursesList({ selectedAge }: CoursesListProps) {
   const { data: allPrograms = [], error, isLoading } = useSWR(
     "/programs",
@@ -60,7 +61,7 @@ export default function CoursesList({ selectedAge }: CoursesListProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {programs.map((program: any) => {
             const imageURL = program.image
-              ? `http://localhost:8000/storage/${program.image}`
+              ? `${backendUrl}/storage/${program.image}`
               : "/default.png";
 
             return (

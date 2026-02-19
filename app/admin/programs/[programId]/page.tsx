@@ -36,6 +36,7 @@ export default function ProgramDetails({
   const [showAdd, setShowAdd] = useState(false);
   const [editing, setEditing] = useState<any>(null);
 
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") ?? "";
   if (!programData)
     return (
       <div className="flex justify-center items-center h-64 text-gray-500">
@@ -90,7 +91,7 @@ export default function ProgramDetails({
         <img
           src={
             program.image
-              ? `http://localhost:8000/storage/${program.image}`
+              ? `${backendUrl}/storage/${program.image}`
               : "/default.png"
           }
           className="w-48 h-48 rounded-2xl object-cover border"
@@ -149,7 +150,7 @@ export default function ProgramDetails({
                     <img
                       src={
                         track.track_img
-                          ? `http://localhost:8000/storage/${track.track_img}`
+                          ? `${backendUrl}/storage/${track.track_img}`
                           : "/default.png"
                       }
                       className="w-12 h-12 rounded-xl object-cover border"

@@ -20,6 +20,7 @@ export default function UsersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
+     const backendUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") ?? "";
   /* ===== Filter + Search ===== */
   const filteredUsers = useMemo(() => {
     if (!data?.data) return [];
@@ -149,7 +150,7 @@ export default function UsersPage() {
                     <img
                       src={
                         user.avatar
-                          ? `http://localhost:8000/storage/${user.avatar}`
+                          ? `${backendUrl}/storage/${user.avatar}`
                           : "/default.png"
                       }
                       className="w-10 h-10 rounded-full border"
@@ -218,7 +219,7 @@ export default function UsersPage() {
             <img
               src={
                 user.avatar
-                  ? `http://localhost:8000/storage/${user.avatar}`
+                  ? `${backendUrl}/storage/${user.avatar}`
                   : "/default.png"
               }
               className="w-14 h-14 rounded-full border"

@@ -21,6 +21,8 @@ export default function ProgramsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
+   const backendUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") ?? "";
+
   /* ===== Filter + Search ===== */
   const filteredPrograms = useMemo(() => {
     if (!data?.data) return [];
@@ -133,7 +135,7 @@ export default function ProgramsPage() {
                     <img
                       src={
                         item.image
-                          ? `http://localhost:8000/storage/${item.image}`
+                          ? `${backendUrl}/storage/${item.image}`
                           : "/default.png"
                       }
                       className="w-12 h-12 rounded-xl object-cover border"
@@ -181,7 +183,7 @@ export default function ProgramsPage() {
               <img
                 src={
                   item.image
-                    ? `http://localhost:8000/storage/${item.image}`
+                    ? `${backendUrl}/storage/${item.image}`
                     : "/default.png"
                 }
                 className="w-14 h-14 rounded-xl object-cover border"

@@ -14,6 +14,7 @@ export default function ProgramPage() {
   const router = useRouter();
   const { user } = useAuth()!;
 
+     const backendUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") ?? "";
   /* ================= PROGRAM ================= */
   const { data: programData, isLoading: programLoading } = useSWR(
     slug ? `/programs/${slug}` : null,
@@ -32,7 +33,7 @@ export default function ProgramPage() {
 
   // رابط الصورة الافتراضية
   const imageURL = program?.image
-    ? `http://localhost:8000/storage/${program.image}`
+    ? `${backendUrl}/storage/${program.image}`
     : "/default.png";
 
   /* ================= SUBSCRIBE ================= */
@@ -142,7 +143,7 @@ export default function ProgramPage() {
                   <img
                     src={
                       track.track_img
-                        ? `http://localhost:8000/storage/${track.track_img}`
+                        ? `${backendUrl}/storage/${track.track_img}`
                         : "/default.png"
                     }
                     className="w-full h-44 object-cover group-hover:scale-105 transition"

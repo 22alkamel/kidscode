@@ -24,7 +24,8 @@ export default function EditProfilePage() {
 
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
-
+ 
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") ?? "";
   // جلب بيانات المستخدم عند تحميل الصفحة
   useEffect(() => {
     api.get("/profile").then((res) => {
@@ -105,7 +106,7 @@ export default function EditProfilePage() {
             <img
               src={
                 user?.avatar
-                  ? `http://localhost:8000${user.avatar}`
+                  ? `${backendUrl}${user.avatar}`
                   : "/default.jpg"
               }
               className="w-24 h-24 rounded-full border-4 border-white object-cover"

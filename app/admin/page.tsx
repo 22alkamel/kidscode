@@ -4,6 +4,7 @@ import useUser from "@/hooks/useUser";
 
 export default function AdminHome() {
   const user = useUser();
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") ?? "";
 
   if (!user)
     return (
@@ -39,7 +40,7 @@ export default function AdminHome() {
           <img
             src={
               user.avatar
-                ? `http://localhost:8000/storage/${user.avatar}`
+                ? `${backendUrl}/storage/${user.avatar}`
                 : "/default.png"
             }
             alt="Avatar"
