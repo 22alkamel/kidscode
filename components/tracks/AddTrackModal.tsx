@@ -26,7 +26,7 @@ export default function AddTrackModal({ onClose, programId, mutate }: any) {
       formData.append("track_img", form.track_img);
     }
 
-    await api.post(`/programs/${programId}/tracks`, formData, {
+    await api.post(`/admin/programs/${programId}/tracks`, formData, {
       headers: { "Content-Type": "multipart/form-data" }
     });
 

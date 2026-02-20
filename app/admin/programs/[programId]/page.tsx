@@ -16,27 +16,27 @@ export default function ProgramDetails({
 }) {
   const { programId } = use(params);
 
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") ?? "";
+  const fetcher = (url: string) => api.get(url).then((res) => res.data);
+
   /* ===== Program Data ===== */
-  const { data: programData } = useSWR(`/admin/programs/${programId}`, (url) =>
-    api.get(url).then((res) => res.data)
+  const { data: programData } = useSWR(
+    programId ? `/admin/programs/${programId}` : null,
+    fetcher
   );
 
   /* ===== Tracks ===== */
-  const {
-    data: tracksData,
-    mutate: mutateTracks,
-    isValidating: tracksLoading,
-  } = useSWR(
-    () => (programId ? `/programs/${programId}/tracks` : null),
-    (url) => api.get(url).then((res) => res.data),
-    { revalidateOnFocus: false }
-  );
+  const { data: tracksData, mutate: mutateTracks, isValidating: tracksLoading } =
+    useSWR(
+      programId ? `/admin/programs/${programId}/tracks` : null,
+      fetcher,
+      { revalidateOnFocus: false }
+    );
 
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [showAdd, setShowAdd] = useState(false);
   const [editing, setEditing] = useState<any>(null);
 
-  const backendUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") ?? "";
   if (!programData)
     return (
       <div className="flex justify-center items-center h-64 text-gray-500">
@@ -47,13 +47,13 @@ export default function ProgramDetails({
   const program = programData.program ?? programData;
   const tracks = tracksData?.data ?? [];
 
-  /* ===== Delete Track ===== */
+  /* ===== Delete Track (سيظل يحتاج admin route و token) ===== */
   async function handleDelete(trackId: number) {
     if (!confirm("هل أنت متأكد من حذف هذا المسار؟")) return;
 
     try {
       setDeletingId(trackId);
-      await api.delete(`/admin/tracks/${trackId}`);
+      await api.delete(`/admin/tracks/${trackId}`); // يبقى للـ admin فقط
       mutateTracks();
     } catch {
       alert("حدث خطأ أثناء الحذف");
@@ -64,7 +64,6 @@ export default function ProgramDetails({
 
   return (
     <div className="space-y-8">
-
       {/* ===== Header ===== */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -77,7 +76,7 @@ export default function ProgramDetails({
         </div>
 
         <Link
-          href="/admin/programs"
+          href="/programs"
           className="px-6 py-3 rounded-full bg-gray-800 text-white text-sm font-semibold
                      hover:bg-gray-900 transition"
         >
@@ -87,7 +86,6 @@ export default function ProgramDetails({
 
       {/* ===== Program Card ===== */}
       <div className="bg-white rounded-3xl shadow p-6 flex flex-col lg:flex-row gap-6">
-
         <img
           src={
             program.image
@@ -98,9 +96,16 @@ export default function ProgramDetails({
         />
 
         <div className="grid grid-cols-2 gap-4 text-sm">
-          <p><span className="font-semibold">المستوى:</span> {program.level}</p>
-          <p><span className="font-semibold">العمر:</span> {program.agemin} - {program.agemax}</p>
-          <p><span className="font-semibold">المدة:</span> {program.duration_weeks} أسبوع</p>
+          <p>
+            <span className="font-semibold">المستوى:</span> {program.level}
+          </p>
+          <p>
+            <span className="font-semibold">العمر:</span> {program.agemin} -{" "}
+            {program.agemax}
+          </p>
+          <p>
+            <span className="font-semibold">المدة:</span> {program.duration_weeks} أسبوع
+          </p>
           <p>
             <span className="font-semibold">السعر:</span>
             <span className="text-green-600 font-bold"> {program.price} $</span>
@@ -110,9 +115,7 @@ export default function ProgramDetails({
 
       {/* ===== Tracks Header ===== */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h2 className="text-xl font-bold text-indigo-900">
-          🛤️ المسارات التعليمية
-        </h2>
+        <h2 className="text-xl font-bold text-indigo-900">🛤️ المسارات التعليمية</h2>
 
         <button
           onClick={() => setShowAdd(true)}
@@ -140,10 +143,7 @@ export default function ProgramDetails({
 
             <tbody>
               {tracks.map((track: any, idx: number) => (
-                <tr
-                  key={track.id}
-                  className="border-t hover:bg-gray-50 transition"
-                >
+                <tr key={track.id} className="border-t hover:bg-gray-50 transition">
                   <td className="p-4">{idx + 1}</td>
 
                   <td className="p-4">
@@ -157,9 +157,7 @@ export default function ProgramDetails({
                     />
                   </td>
 
-                  <td className="p-4 font-semibold text-indigo-900">
-                    {track.title}
-                  </td>
+                  <td className="p-4 font-semibold text-indigo-900">{track.title}</td>
 
                   <td className="p-4 text-gray-600">
                     {track.estimated_time ?? "-"} دقيقة
@@ -179,7 +177,6 @@ export default function ProgramDetails({
 
                   <td className="p-4">
                     <div className="flex flex-wrap gap-3 text-xs font-semibold">
-
                       <button
                         onClick={() => setEditing(track)}
                         className="px-4 py-2 rounded-full bg-blue-100 text-blue-700 hover:bg-blue-200"
@@ -197,12 +194,11 @@ export default function ProgramDetails({
                       </button>
 
                       <Link
-                        href={`/admin/programs/${program.id}/tracks/${track.id}/lessons`}
+                        href={`/programs/${program.id}/tracks/${track.id}/lessons`}
                         className="px-4 py-2 rounded-full bg-indigo-100 text-indigo-700 hover:bg-indigo-200"
                       >
                         عرض الدروس
                       </Link>
-
                     </div>
                   </td>
                 </tr>

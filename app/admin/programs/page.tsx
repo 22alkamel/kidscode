@@ -262,7 +262,7 @@ function Actions({ item, setEditing, mutate }: any) {
   return (
     <div className="flex flex-wrap gap-3 text-xs font-semibold">
       <Link
-        href={`/admin/programs/${item.id}`}
+        href={`/admin/programs/${item.slug}`}
         className="px-4 py-2 rounded-full bg-indigo-100 text-indigo-700 hover:bg-indigo-200"
       >
         عرض
