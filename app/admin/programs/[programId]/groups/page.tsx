@@ -10,7 +10,7 @@ export default function GroupsListPage() {
   const router = useRouter();
 
   const { data, isLoading, mutate } = useSWR(
-    programId ? `/programs/${programId}/groups` : null,
+    programId ? `/admin/programs/${programId}/groups` : null,
     async (url) => {
       const res = await api.get(url);
       console.log("groups API response:", res.data);

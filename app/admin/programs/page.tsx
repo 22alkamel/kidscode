@@ -114,7 +114,7 @@ export default function ProgramsPage() {
             <thead className="bg-gray-50 text-gray-600">
               <tr>
                 <th className="p-4">العنوان</th>
-                <th className="p-4">Slug</th>
+                <th className="p-4">الوصف</th>
                 <th className="p-4">الصورة</th>
                 <th className="p-4">المستوى</th>
                 <th className="p-4">العمر</th>
@@ -129,7 +129,7 @@ export default function ProgramsPage() {
               {paginatedPrograms.map((item: any) => (
                 <tr key={item.id} className="border-t hover:bg-gray-50 transition">
                   <td className="p-4 font-semibold text-indigo-900">{item.title}</td>
-                  <td className="p-4 text-gray-500">{item.slug}</td>
+                  <td className="p-4 text-gray-500">{item.description}</td>
 
                   <td className="p-4">
                     <img
@@ -269,7 +269,7 @@ function Actions({ item, setEditing, mutate }: any) {
       </Link>
 
       <Link
-        href={`/admin/programs/${item.id}/groups`}
+        href={`/admin/programs/${item.slug}/groups`}
         className="px-4 py-2 rounded-full bg-purple-100 text-purple-700 hover:bg-purple-200"
       >
         👥 الجروبات
@@ -297,7 +297,7 @@ function Actions({ item, setEditing, mutate }: any) {
       <button
         onClick={async () => {
           if (!confirm("هل تريد حذف البرنامج؟")) return;
-          await api.delete(`/admin/programs/${item.id}`);
+          await api.delete(`/admin/programs/${item.slug}`);
           mutate();
         }}
         className="px-4 py-2 rounded-full bg-red-100 text-red-600 hover:bg-red-200"

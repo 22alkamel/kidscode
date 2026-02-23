@@ -21,7 +21,7 @@ export default function EditProgramModal({ program, onClose, mutate }: any) {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("_method", "PUT");
+    // formData.append("_method", "PUT");
 
     // فقط إذا تغيّر عن البيانات القديمة
     if (form.title !== program.title) formData.append("title", form.title);
@@ -44,7 +44,7 @@ export default function EditProgramModal({ program, onClose, mutate }: any) {
     }
 
     try {
-      await api.post(`/admin/programs/${program.id}`, formData, {
+      await api.put(`/admin/programs/${program.slug}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       mutate();
@@ -151,7 +151,11 @@ export default function EditProgramModal({ program, onClose, mutate }: any) {
             <button className="px-10 py-2 rounded-lg bg-indigo-600 text-white font-semibold w-full sm:w-auto hover:bg-indigo-700 transition">
               حفظ التعديلات
             </button>
-            <button type="button" onClick={onClose} className="px-6 py-2 rounded-lg bg-gray-200 w-full sm:w-auto">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-6 py-2 rounded-lg bg-gray-200 w-full sm:w-auto"
+            >
               إلغاء
             </button>
           </div>
