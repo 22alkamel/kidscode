@@ -32,7 +32,7 @@ export default function AddStudentPage() {
   ========================= */
   const endpoint =
     programId && groupId
-      ? `/programs/${programId}/groups/${groupId}/available-students` // ⚡️ بدون /api هنا
+      ? `/admin/programs/${programId}/groups/${groupId}/available-students` // ⚡️ بدون /api هنا
       : null;
 
   const { data: students, isLoading, error: swrError } = useSWR<Student[]>(
@@ -64,7 +64,7 @@ export default function AddStudentPage() {
     try {
       setLoading(true);
 
-      await api.post(`/groups/${groupId}/add-student`, {
+      await api.post(`/admin/groups/${groupId}/add-student`, {
         student_id: Number(studentId),
       });
 

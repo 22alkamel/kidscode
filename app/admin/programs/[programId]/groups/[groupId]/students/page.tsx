@@ -14,7 +14,7 @@ export default function GroupStudentsPage() {
     isLoading,
     mutate,
   } = useSWR(
-    groupId ? `/groups/${groupId}/students` : null,
+    groupId ? `/admin/groups/${groupId}/students` : null,
     async (url) => {
       const res = await api.get(url);
       console.log("API RESPONSE:", res.data);
