@@ -32,7 +32,7 @@ export default function AddStudentPage() {
   ========================= */
   const endpoint =
     programId && groupId
-      ? `/admin/programs/${programId}/groups/${groupId}/available-students` // ⚡️ بدون /api هنا
+      ? `/admin/programs/${programId}/groups/${groupId}/available-students` 
       : null;
 
   const { data: students, isLoading, error: swrError } = useSWR<Student[]>(
