@@ -18,7 +18,7 @@ export default function CreateSession() {
   const [trackId, setTrackId] = useState("");
 
   const { data: lessons } = useSWR(
-    trackId ? `/tracks/${trackId}/lessons` : null,
+    trackId ? `/admin/tracks/${trackId}/lessons` : null,
     (url) => api.get(url).then((res) => res.data)
   );
 
@@ -34,7 +34,7 @@ export default function CreateSession() {
     }
 
     try {
-      await api.post("/class-sessions", {
+      await api.post("/admin/class-sessions", {
         lesson_id: form.lesson_id,
         group_id: groupId,
         is_active: form.is_active,

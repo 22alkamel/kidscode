@@ -9,7 +9,7 @@ export default function SessionsPage() {
   const { programId, groupId } = useParams();
 
   const { data, isLoading, mutate } = useSWR(
-    `/groups/${groupId}/class-sessions`,
+    `/admin/groups/${groupId}/class-sessions`,
     async url => (await api.get(url)).data
   );
 

@@ -16,7 +16,7 @@ export default function EditGroupPage() {
 
   // Fetch group details
 const { data: group, error: swrError } = useSWR(
-  groupId ? `/groups/${groupId}` : null,
+  groupId ? `/admin/groups/${groupId}` : null,
   async url => {
     try {
       const res = await api.get(url);
@@ -32,7 +32,7 @@ const { data: group, error: swrError } = useSWR(
 
 
   // Fetch all trainers
-  const { data: usersData } = useSWR('/api/admin/users', url =>
+  const { data: usersData } = useSWR('/admin/users', url =>
     api.get(url).then(res => res.data)
   );
   const trainers = Array.isArray(usersData) ? usersData.filter((u: any) => u.role === 'trainer') : [];
@@ -56,7 +56,7 @@ const { data: group, error: swrError } = useSWR(
 
     try {
       setLoading(true);
-      await api.put(`/api/groups/${groupId}`, {
+      await api.put(`/admin/groups/${groupId}`, {
         name,
         trainer_id: trainerId
       });
