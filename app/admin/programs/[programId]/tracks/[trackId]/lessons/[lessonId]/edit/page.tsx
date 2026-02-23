@@ -43,7 +43,7 @@ export default function LessonEditPage() {
 
   /* ================= Fetch ================= */
   useEffect(() => {
-    api.get(`/lessons/${lessonId}`).then((res) => {
+    api.get(`/admin/lessons/${lessonId}`).then((res) => {
       const l = res.data;
       setLessonForm({
         title: l.title,
@@ -60,7 +60,7 @@ export default function LessonEditPage() {
   const saveLesson = async () => {
     try {
       setSaving(true);
-      await api.put(`/lessons/${lessonId}`, {
+      await api.put(`/admin/lessons/${lessonId}`, {
         ...lessonForm,
         duration_minutes: lessonForm.duration_minutes
           ? Number(lessonForm.duration_minutes)
@@ -82,7 +82,7 @@ export default function LessonEditPage() {
     if (mediaSource === "file" && mediaFile) form.append("file", mediaFile);
     if (mediaSource === "link") form.append("url", mediaForm.url);
 
-    const res = await api.post(`/lessons/${lessonId}/media`, form);
+    const res = await api.post(`/admin/lessons/${lessonId}/media`, form);
     setMediaList((prev) => [...prev, res.data]);
     setMediaFile(null);
     setMediaForm({ type: "video", url: "", caption: "" });
@@ -90,7 +90,7 @@ export default function LessonEditPage() {
   };
 
   const deleteMedia = async (id: number) => {
-    await api.delete(`/lessons/${lessonId}/media/${id}`);
+    await api.delete(`/admin/lessons/${lessonId}/media/${id}`);
     setMediaList((prev) => prev.filter((m) => m.id !== id));
     toastMsg("🗑️ تم حذف الميديا");
   };
@@ -103,7 +103,7 @@ export default function LessonEditPage() {
       options: questionType === "mcq" ? options : undefined,
     };
 
-    const res = await api.post(`/lessons/${lessonId}/questions`, payload);
+    const res = await api.post(`/admin/lessons/${lessonId}/questions`, payload);
     setQuestions((prev) => [...prev, res.data]);
     setQuestionText("");
     setOptions(["", "", "", ""]);
@@ -112,7 +112,7 @@ export default function LessonEditPage() {
   };
 
   const deleteQuestion = async (id: number) => {
-    await api.delete(`/lessons/${lessonId}/questions/${id}`);
+    await api.delete(`/admin/lessons/${lessonId}/questions/${id}`);
     setQuestions((prev) => prev.filter((q) => q.id !== id));
     toastMsg("🗑️ تم حذف السؤال");
   };

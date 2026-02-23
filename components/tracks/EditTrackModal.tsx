@@ -35,7 +35,7 @@ export default function EditTrackModal({
     }
 
     try {
-      await api.post(`/tracks/${track.id}`, formData, {
+      await api.post(`/admin/tracks/${track.id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       mutate();

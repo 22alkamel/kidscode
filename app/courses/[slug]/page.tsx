@@ -158,6 +158,9 @@ export default function ProgramPage() {
                   <h3 className="font-bold text-indigo-900 mb-2">
                     {track.title}
                   </h3>
+                  <p className="font-bold text-gray-700 mb-2">
+                    {track.description}
+                  </p>
 
                   <p className="text-sm text-gray-500">
                     مدة تقديرية: {track.estimated_time ?? "-"} دقيقة

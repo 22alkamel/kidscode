@@ -36,7 +36,7 @@ export default function CreateGroupPage() {
 
     try {
       setLoading(true);
-      await api.post(`/programs/${programId}/groups`, {
+      await api.post(`/admin/programs/${programId}/groups`, {
         name,
         trainer_id: trainerId,
       });

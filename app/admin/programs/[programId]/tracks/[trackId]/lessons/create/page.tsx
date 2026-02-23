@@ -73,7 +73,7 @@ export default function CreateLessonStepperPage() {
      STEP 1 – CREATE LESSON
   ========================= */
   const createLesson = async () => {
-    const res = await api.post(`/tracks/${trackId}/lessons`, {
+    const res = await api.post(`/admin/tracks/${trackId}/lessons`, {
       ...lessonForm,
       duration_minutes: lessonForm.duration_minutes ? Number(lessonForm.duration_minutes) : null,
     });
@@ -100,7 +100,7 @@ export default function CreateLessonStepperPage() {
       formData.append("url", mediaForm.url);
     }
 
-    const res = await api.post(`/lessons/${lessonId}/media`, formData, {
+    const res = await api.post(`/admin/lessons/${lessonId}/media`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
@@ -116,7 +116,7 @@ export default function CreateLessonStepperPage() {
     if (!lessonId) return;
 
     try {
-      await api.post(`/lessons/${lessonId}/questions`, {
+      await api.post(`/admin/lessons/${lessonId}/questions`, {
         type: questionType,
         question: questionText,
         options: questionType === "multiple_choice" ? options : null,

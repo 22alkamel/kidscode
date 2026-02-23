@@ -17,7 +17,7 @@ export default function TrackLessonsPage() {
 
   useEffect(() => {
     api
-      .get(`/tracks/${trackId}/lessons`)
+      .get(`/admin/tracks/${trackId}/lessons`)
       .then((res) => setLessons(res.data))
       .finally(() => setLoading(false));
   }, [trackId]);

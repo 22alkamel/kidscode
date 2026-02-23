@@ -194,7 +194,7 @@ export default function ProgramDetails({
                       </button>
 
                       <Link
-                        href={`/programs/${program.id}/tracks/${track.id}/lessons`}
+                        href={`/admin/programs/${program.id}/tracks/${track.id}/lessons`}
                         className="px-4 py-2 rounded-full bg-indigo-100 text-indigo-700 hover:bg-indigo-200"
                       >
                         عرض الدروس
