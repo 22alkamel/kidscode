@@ -11,7 +11,7 @@ export default function LessonShowPage() {
 
   useEffect(() => {
     api
-      .get(`/lessons/${lessonId}`)
+      .get(`/admin/lessons/${lessonId}`)
       .then((res) => setLesson(res.data))
       .finally(() => setLoading(false));
   }, [lessonId]);

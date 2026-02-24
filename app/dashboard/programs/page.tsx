@@ -35,12 +35,10 @@ export default function StudentProgramsPage() {
   return (
     <div className="min-h-screen bg-[#EEF0FF] p-6" dir="rtl">
       <div className="bg-white rounded-2xl p-6 shadow">
-
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-indigo-600">
             📚 برامجي التعليمية
           </h1>
-
         </div>
 
         <table className="w-full text-sm">
@@ -53,7 +51,6 @@ export default function StudentProgramsPage() {
           </thead>
 
           <tbody className="divide-y">
-
             {loading && (
               <tr>
                 <td colSpan={3} className="text-center py-6">
@@ -73,10 +70,7 @@ export default function StudentProgramsPage() {
             {!loading &&
               registrations.map((reg) => (
                 <tr key={reg.id} className="text-right">
-
-                  <td className="font-semibold">
-                    {reg.program?.title}
-                  </td>
+                  <td className="font-semibold">{reg.program?.title}</td>
 
                   <td
                     className={
@@ -96,7 +90,14 @@ export default function StudentProgramsPage() {
                     {DAYS_MAP[reg.preferred_days] || "—"} |{" "}
                     {TIME_MAP[reg.preferred_time] || "—"}
                   </td>
-
+                  <td className="text-right">
+                    <Link
+                      href={`/dashboard/programs/${reg.program.id}/sessions`}
+                      className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700"
+                    >
+                      عرض الحصص
+                    </Link>
+                  </td>
                 </tr>
               ))}
           </tbody>
